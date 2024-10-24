@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Ingresar Descuento</title>
+    <script>
+        function validateForm() {
+            const nombre = document.getElementById('nombre').value.trim();
+            const valor = document.getElementById('valor').value.trim();
+
+            // Validaciones para el campo nombre
+            const nombrePattern = /^Descuento de \d+%$/;
+            if (!nombrePattern.test(nombre)) {
+                alert('El nombre debe seguir el formato "Descuento de XX%", donde XX es un número.');
+                return false;
+            }
+
+            // Validaciones para el campo valor
+            const valorPattern = /^(0\.\d+|0\.[0-9][0-9]?)$/; // Acepta valores como "0.05" hasta "0.90"
+            if (!valorPattern.test(valor) || parseFloat(valor) > 0.90) {
+                alert('El valor debe ser un número entre 0.05 y 0.90.');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Ingresar Descuento</h2>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('agregar_promocion') }}" method="post" onsubmit="return validateForm()">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required><br><br>
+            <label for="valor">Valor:</label>
+            <input type="text" id="valor" name="valor" required><br><br>
+            <input type="submit" value="Guardar">
+        </form>
+        
+        <br>
+        <a href="{{ url_for('promocion') }}">Lista de Descuentos</a>
+    </div>
+</body>
+</html>

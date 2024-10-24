@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Mantenimiento de Equipos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function setDefaultDate() {
+            const today = new Date();
+            const lastMonth = new Date(today);
+            lastMonth.setMonth(today.getMonth() - 1);
+
+            const todayString = today.toISOString().split('T')[0];
+            const lastMonthString = lastMonth.toISOString().split('T')[0];
+
+            const dateInput = document.getElementById('fecha');
+            dateInput.setAttribute('min', lastMonthString);
+            dateInput.setAttribute('value', todayString);
+        }
+
+        function validarFormulario() {
+            const idEquipo = document.getElementById('id_equipo').value;
+            const fecha = document.getElementById('fecha').value;
+            const tipo = document.getElementById('tipo').value;
+            const detalles = document.getElementById('detalles').value.trim();
+            const estado = document.getElementById('estado').value;
+            const documento = document.getElementById('documento').value;
+
+            // Validar ID del Equipo
+            if (!idEquipo) {
+                alert('Seleccione un ID de Equipo.');
+                return false;
+            }
+
+            // Validar Fecha
+            const minDate = document.getElementById('fecha').getAttribute('min');
+            if (!fecha || fecha < minDate) {
+                alert('La fecha debe ser posterior a un mes desde hoy.');
+                return false;
+            }
+
+            // Validar Tipo
+            if (!tipo) {
+                alert('Seleccione un tipo de mantenimiento.');
+                return false;
+            }
+
+            // Validar Detalles
+            const detallesPattern = /^[a-zA-Z, ]{8,50}$/;
+            if (!detalles) {
+                alert('Ingrese los detalles del mantenimiento.');
+                return false;
+            } else if (!detallesPattern.test(detalles)) {
+                alert('Los detalles deben tener entre 8 y 50 caracteres y solo pueden contener letras y comas.');
+                return false;
+            }
+
+            // Validar Estado
+            if (!estado) {
+                alert('Seleccione el estado del mantenimiento.');
+                return false;
+            }
+
+            // Validar Documento
+            const documentoPattern = /^(0[1-9]|1[0-8])\d{11}$/;
+            if (!documento || !documentoPattern.test(documento)) {
+                alert('El documento debe contener exactamente 13 dígitos, iniciar con un número entre 01 y 18, y ser un número positivo.');
+                return false;
+            }
+
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setDefaultDate();
+            document.querySelector('form').addEventListener('submit', function(event) {
+                if (!validarFormulario()) {
+                    event.preventDefault(); // Evitar el envío del formulario si hay errores
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Mantenimiento de Equipos</h1>
+        <form action="{{ url_for('submit') }}" method="POST">
+            <label for="id_equipo">ID del Equipo:</label>
+            <select id="id_equipo" name="id_equipo" required>
+                <option value="">Seleccione una opción</option>
+                <option value="3030">3030</option>
+                <option value="0909">0909</option>
+                <option value="2222">2222</option>
+            </select>
+            
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha" required>
+            
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" name="tipo" required>
+                <option value="">Seleccione una opción</option>
+                <option value="electrico">Eléctrico</option>
+                <option value="mecanico">Mecánico</option>
+                <option value="automatico">Automático</option>
+                <option value="no automatico">No Automático</option>
+            </select>
+            
+            <label for="detalles">Detalles:</label>
+            <textarea id="detalles" name="detalles" required></textarea>
+            
+            <label for="estado">Estado:</label>
+            <select id="estado" name="estado" required>
+                <option value="">Seleccione una opción</option>
+                <option value="bueno">Bueno</option>
+                <option value="medio">Medio</option>
+                <option value="malo">Malo</option>
+                <option value="en reparacion">En Reparación</option>
+            </select>
+            
+            <label for="documento">Documento:</label>
+            <input type="text" id="documento" name="documento" required pattern="^(0[1-9]|1[0-8])\d{11}$" title="El documento debe contener exactamente 13 dígitos, iniciar con un número entre 01 y 18, y ser un número positivo.">
+            
+            <button type="submit">Agregar Mantenimiento</button>
+        </form>
+        <a href="{{ url_for('mantenimientos') }}">Ver Mantenimientos</a>
+    </div>
+</body>
+</html>

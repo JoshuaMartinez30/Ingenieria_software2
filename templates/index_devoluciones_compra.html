@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Devoluciones de Compra</title>
+    <script>
+        let receiptDate = '';
+        let availableQuantity = 0;
+
+        async function loadDetalles() {
+            const idPedido = document.getElementById('id_pedido').value;
+            const response = await fetch(`/detalles/${idPedido}`);
+            const detalles = await response.json();
+            const detallesSelect = document.getElementById('id_detalle');
+            detallesSelect.innerHTML = ''; // Clear current select
+
+            // Clear available quantity whenever new details are loaded
+            availableQuantity = 0;
+
+            detalles.forEach(detalle => {
+                const option = document.createElement('option');
+                option.value = detalle.id_detalle; // Ensure this property is correct
+                option.text = `${detalle.nombre_producto} - Cantidad: ${detalle.cantidad}`; // Show product name
+                detallesSelect.add(option);
+            });
+        }
+
+        async function loadDetalleInfo() {
+            const idDetalle = document.getElementById('id_detalle').value;
+            if (idDetalle) {
+                const response = await fetch(`/detalle-info/${idDetalle}`);
+                const detalleInfo = await response.json();
+                receiptDate = detalleInfo.fecha_recepcion; // Ensure this property exists
+                availableQuantity = detalleInfo.cantidad; // Ensure this property exists
+            }
+        }
+
+        
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Devoluciones de Compra</h2>
+
+        <form method="post" action="{{ url_for('submit') }}" onsubmit="validateForm(event)">
+            <label for="id_pedido">ID Pedido:</label>
+            <select id="id_pedido" name="id_pedido" onchange="loadDetalles()" required>
+                <option value="" disabled selected>Seleccionar</option>
+                {% for pedido in pedidos %}
+                    <option value="{{ pedido[0] }}">{{ pedido[0] }}</option> <!-- Muestra solo el ID del pedido -->
+                {% endfor %}
+            </select>
+
+            <label for="id_detalle">ID Detalle:</label>
+            <select id="id_detalle" name="id_detalle" onchange="loadDetalleInfo()" required>
+                <option value="" disabled selected>Selecciona un detalle</option>
+            </select>
+
+            <label for="fecha_devolucion">Fecha Devolución:</label>
+            <input type="date" name="fecha_devolucion" required>
+
+            <label for="motivo">Motivo:</label>
+            <input type="text" name="motivo" required>
+
+            <label for="cantidad_devuelta">Cantidad Devuelta:</label>
+            <input type="number" name="cantidad_devuelta" required>
+
+            <button type="submit">Registrar Devolución</button>
+        </form>
+        <br>
+        <a href="{{ url_for('devoluciones') }}">Lista de Devoluciones</a>
+    </div>
+</body>
+</html>

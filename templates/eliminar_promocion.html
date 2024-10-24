@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Eliminar Descuento</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Eliminar Descuento</h2>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        
+        <form action="{{ url_for('eliminar_promocion', id_promocion=promocion[0]) }}" method="post">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" value="{{ promocion[1] }}" readonly><br><br>
+                        
+            <label for="valor">Valor:</label>
+            <input type="text" id="valor" name="valor" value="{{ promocion[2] }}" readonly><br><br>
+            
+            <button type="submit" onclick="return confirm('¿Estás seguro de eliminar esta promoción? {{ promocion[1] }}');">Eliminar</button>
+        </form>
+
+        <br>
+        <a href="{{ url_for('promocion') }}">Lista de Descuentos<</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Inventario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function validarFormulario() {
+            const cantidadEnStock = parseInt(document.getElementById('cantidad_en_stock').value);
+            const stockMinimo = parseInt(document.getElementById('stock_minimo').value);
+            const stockMaximo = parseInt(document.getElementById('stock_maximo').value);
+
+            // Validar que los campos sean numéricos
+            if (isNaN(cantidadEnStock) || isNaN(stockMinimo) || isNaN(stockMaximo)) {
+                alert('Todos los campos deben contener valores numéricos.');
+                return false;
+            }
+
+            // Validar que la cantidad en stock esté entre el stock mínimo y máximo
+            if (cantidadEnStock < stockMinimo || cantidadEnStock > stockMaximo) {
+                alert('La cantidad en stock debe estar entre el stock mínimo y máximo.');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h1>Editar Inventario</h1>
+    <form method="POST" onsubmit="return validarFormulario()">
+        <label for="id_producto">Producto:</label>
+        <select name="id_producto" id="id_producto" required>
+            {% for producto in productos %}
+                <option value="{{ producto[0] }}" {% if producto[0] == inventario[1] %}selected{% endif %}>{{ producto[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="id_categoria">Categoría:</label>
+        <select name="id_categoria" id="id_categoria" required>
+            {% for categoria in categorias %}
+                <option value="{{ categoria[0] }}" {% if categoria[0] == inventario[2] %}selected{% endif %}>{{ categoria[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="cantidad_en_stock">Cantidad en Stock:</label>
+        <input type="number" name="cantidad_en_stock" id="cantidad_en_stock" value="{{ inventario[3] }}" required>
+
+        <label for="stock_minimo">Stock Mínimo:</label>
+        <input type="number" name="stock_minimo" id="stock_minimo" value="{{ inventario[4] }}" required>
+
+        <label for="stock_maximo">Stock Máximo:</label>
+        <input type="number" name="stock_maximo" id="stock_maximo" value="{{ inventario[5] }}" required>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+    <a href="{{ url_for('inventario') }}">Volver al Inventario</a>
+</body>
+</html>

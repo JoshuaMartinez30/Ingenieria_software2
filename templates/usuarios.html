@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Lista de Usuarios | Inventario</title>
+</head>
+<body>
+    <div class="container2">
+    <h2>Lista de usuarios</h2>
+    <form method="get" action="{{ url_for('usuarios') }}">
+        <input type="text" name="search_query" placeholder="Buscar usuarios..." value="{{ search_query }}">
+        <select name="search_criteria">
+            <option value="primer_nombre" {% if search_criteria == 'primer_nombre' %}selected{% endif %}>Primer Nombre</option>
+            <option value="primer_apellido" {% if search_criteria == 'primer_apellido' %}selected{% endif %}>Primer Apellido</option>
+            <option value="correo" {% if search_criteria == 'correo' %}selected{% endif %}>Correo</option>
+            <option value="usuario_activo" {% if search_criteria == 'usuario_activo' %}selected{% endif %}>Usuario Activo</option>
+        </select>
+        <button type="submit">Buscar</button>
+    </form>
+    
+
+    <br>
+    <form method="get" action="{{ url_for('usuarios') }}">
+        <label for="per_page">Elementos por página:</label>
+        <select name="per_page" id="per_page" onchange="this.form.submit()">
+            <option value="5" {% if per_page == 5 %}selected{% endif %}>5</option>
+            <option value="10" {% if per_page == 10 %}selected{% endif %}>10</option>
+            <option value="25" {% if per_page == 25 %}selected{% endif %}>25</option>
+        </select>
+
+        <input type="hidden" name="search_query" value="{{ search_query }}">
+        <input type="hidden" name="search_criteria" value="{{ search_criteria }}">
+    </form>
+
+    <br>
+
+    <a class="button-link ing2" href="http://127.0.0.1:5030/index_principal">INICIO</a>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Correo</th>
+                <th>Contraseña</th>
+                <th>Activo</th>
+                <th>Super Usuario</th>
+                <th>Sucursal</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario[0] }}</td>
+                <td>{{ usuario[1] }}</td>
+                <td>{{ usuario[2] }}</td>
+                <td>{{ usuario[3] }}</td>
+                <td> ********* </td>
+                <td>{{ usuario[5] }}</td>
+                <td>{{ usuario[6] }}</td>
+                <td>{{ usuario[7] }}</td>
+                <td>
+                    <a class="button-link baa" href="#" onclick="openEditWindow('{{ url_for('edit_usuarios', id_usuario=usuario[0]) }}')">Editar <i class='bx bx-edit' style='color:#000000'></i></a>
+                    <a class="button-link bee" href="{{ url_for('eliminar_usuarios', id_usuario=usuario[0]) }}">Eliminar <i class='bx bx-trash-alt' style='color:#000000'></i></a>
+
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4">No se encontraron Usuarios.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="{{ url_for('usuarios', search_criteria=search_criteria, search_query=search_query, page=page-1, per_page=per_page) }}">« Anterior</a>
+        {% endif %}
+        {% for p in range(1, total_pages + 1) %}
+        <a href="{{ url_for('usuarios', search_criteria=search_criteria, search_query=search_query, page=p, per_page=per_page) }}" {% if p == page %}class="active"{% endif %}>{{ p }}</a>
+        {% endfor %}
+        {% if page < total_pages %}
+        <a href="{{ url_for('usuarios', search_criteria=search_criteria, search_query=search_query, page=page+1, per_page=per_page) }}">Siguiente »</a>
+        {% endif %}
+    </div>
+
+    <script>
+        function openEditWindow(url) {
+            window.open(url, 'popupWindow', 'width=600,height=400,scrollbars=yes');
+        }
+        </script>
+        </div>
+</body>
+</html>

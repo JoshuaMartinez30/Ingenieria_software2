@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Idea de Mejora</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Eliminar Idea de Mejora</h1>
+    <p>¿Está seguro que desea eliminar la siguiente idea?</p>
+    <p>Documento: {{ idea[1] }}</p>
+    <p>Fecha Propuesta: {{ idea[2] }}</p>
+    <p>Descripción de la Idea: {{ idea[3] }}</p>
+    <p>Estado: {{ idea[4] }}</p>
+    <p>Fecha Implementación: {{ idea[5] }}</p>
+    <p>Descripción de la Implementación: {{ idea[6] }}</p>
+    <p>Fecha Evaluación: {{ idea[7] }}</p>
+    <p>Impacto: {{ idea[8] }}</p>
+    <p>Indicadores de Rendimiento: {{ idea[9] }}</p>
+    <form action="{{ url_for('eliminar_idea', id_mejora=idea[0]) }}" method="POST">
+        <button type="submit">Eliminar</button>
+        <a href="{{ url_for('ideas') }}">Cancelar</a>
+    </form>
+</body>
+</html>

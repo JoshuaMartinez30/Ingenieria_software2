@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingrese el proveedor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Ingrese su proveedor</h2>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('submit') }}" method="post">
+            <label for="Nombre_del_proveedor">Nombre del proveedor:</label>
+            <input type="text" id="Nombre_del_proveedor" name="Nombre_del_proveedor" required><br><br>
+            
+            <label for="Producto_Servicio">Producto/Servicio:</label>
+            <input type="text" id="Producto_Servicio" name="Producto_Servicio" required><br><br>
+            
+            <label for="Historial_de_desempeño">Historial de desempeño:</label>
+            <select id="Historial_de_desempeño" name="Historial_de_desempeño" required>
+                <option value="Malo">Malo</option>
+                <option value="Medio">Medio</option>
+                <option value="Bueno">Bueno</option>
+            </select><br><br>
+
+            <label for="nombre_compañia">Nombre de la Compañia:</label>
+            <input type="text" id="nombre_compañia" name="nombre_compañia" required><br><br>
+            
+            <label for="Telefono">Teléfono:</label>
+            <input type="text" id="Telefono" name="Telefono" required><br><br>
+
+            <label for="Ciudad">Ciudad:</label>
+            <input type="text" id="Ciudad" name="Ciudad" required><br><br>
+
+            <label for="Tipo">Tipo:</label>
+            <select id="Tipo" name="Tipo" required>
+                <option value="DNI">DNI</option>
+                <option value="Pasaporte">Pasaporte</option>
+                <option value="RTN">RTN</option>
+            </select><br><br>
+            
+            <label for="Documento">Documento:</label>
+            <input type="text" id="Documento" name="Documento" required><br><br>
+            
+            <input type="submit" value="Guardar">
+        </form> 
+        <br>
+        <a href="{{ url_for('proveedores') }}">Lista de proveedores</a>
+    </div>
+</body>
+</html>

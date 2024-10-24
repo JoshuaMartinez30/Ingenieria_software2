@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Mantenimiento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Eliminar Mantenimiento</h1>
+        <p>¿Estás seguro de que quieres eliminar este mantenimiento?</p>
+        <form action="{{ url_for('eliminar_mantenimiento', id_mantenimiento=mantenimiento[0]) }}" method="POST">
+            <button type="submit">Eliminar</button>
+        </form>
+        <a href="{{ url_for('mantenimientos') }}">Regresar</a>
+    </div>
+</body>
+</html>
